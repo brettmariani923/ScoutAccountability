@@ -1,4 +1,4 @@
-﻿const BACKEND_URL = "https://scout-email-api.vercel.app/api/email";
+﻿const BACKEND_URL = "https://scout-accountability.vercel.app/api/email";
 const ALERT_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
 
 
