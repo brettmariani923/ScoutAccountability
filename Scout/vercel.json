@@ -1,9 +1,15 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/email.js", "use": "@vercel/node" }
+    {
+      "src": "Scout/api/email.js",
+      "use": "@vercel/node"
+    }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" }
+    {
+      "src": "/api/(.*)",
+      "dest": "Scout/api/$1"
+    }
   ]
 }
