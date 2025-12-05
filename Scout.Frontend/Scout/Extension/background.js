@@ -1,62 +1,73 @@
 ﻿const BACKEND_URL = "https://scout-email-api.vercel.app/api/email";
 const ALERT_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
 
+
+// In-memory map: hostname -> last alert timestamp
 const lastAlerts = {};
 
-// When tab finishes loading
+// Listen when a tab finishes loading
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status !== "complete" || !tab.url) return;
-    handleTabVisit(tab);
+    handleTabVisit(tabId, tab);
 });
 
-// When user switches tabs
+// Optionally also when user switches active tab
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
     const tab = await chrome.tabs.get(activeInfo.tabId);
-    if (tab && tab.url) handleTabVisit(tab);
+    if (tab && tab.url) {
+        handleTabVisit(activeInfo.tabId, tab);
+    }
 });
 
-async function handleTabVisit(tab) {
+async function handleTabVisit(tabId, tab) {
     try {
-        const { blockedSites, email, enabled } = await chrome.storage.sync.get([
-            "blockedSites",
-            "email",
-            "enabled"
-        ]);
+        const settings = await chrome.storage.sync.get(["blockedSites", "email", "enabled"]);
+        const blockedSites = settings.blockedSites || [];
+        const email = settings.email;
+        const enabled = settings.enabled ?? true;
 
         if (!enabled) return;
-        if (!blockedSites?.length || !email) return;
+        if (!blockedSites.length || !email) return;
 
-        const hostname = new URL(tab.url).hostname.toLowerCase();
-        if (!isBlocked(hostname, blockedSites)) return;
+        const url = tab.url;
+        const hostname = new URL(url).hostname.toLowerCase();
 
+        if (!isBlockedHost(hostname, blockedSites)) return;
+
+        // Cooldown per hostname
         const now = Date.now();
         const last = lastAlerts[hostname] || 0;
-        if (now - last < ALERT_COOLDOWN_MS) return;
+        if (now - last < ALERT_COOLDOWN_MS) {
+            return; // recently alerted for this host
+        }
 
         lastAlerts[hostname] = now;
 
         await captureAndSend(tab, email);
     } catch (err) {
-        console.error("Scout error:", err);
+        console.error("Scout error handling tab visit:", err);
     }
 }
 
-function isBlocked(hostname, list) {
-    return list.some(entry => {
-        const term = entry.trim().toLowerCase();
-        return term && hostname.includes(term);
+function isBlockedHost(hostname, blockedSites) {
+    return blockedSites.some(entry => {
+        const trimmed = entry.trim().toLowerCase();
+        if (!trimmed) return false;
+        // Simple "contains" match: "instagram" matches "www.instagram.com"
+        return hostname.includes(trimmed);
     });
 }
 
 async function captureAndSend(tab, email) {
     try {
-        const image = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
+        // Capture the visible tab as PNG data URL
+        const imageDataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
 
         const payload = {
-            image,
+            image: imageDataUrl,
             url: tab.url,
             title: tab.title,
-            email,
+            email: email,
             timestamp: new Date().toISOString()
         };
 
@@ -66,6 +77,5 @@ async function captureAndSend(tab, email) {
             body: JSON.stringify(payload)
         });
     } catch (err) {
-        console.error("Failed to send screenshot:", err);
+        console.error("Scout failed to capture/send screenshot:", err);
     }
-}

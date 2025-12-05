@@ -1,28 +1,31 @@
-﻿document.addEventListener("DOMContentLoaded", loadSettings);
-document.getElementById("saveBtn").addEventListener("click", save);
+﻿document.addEventListener("DOMContentLoaded", () => {
+    const blockedSitesInput = document.getElementById("blockedSites");
+    const emailInput = document.getElementById("email");
+    const enabledCheckbox = document.getElementById("enabled");
+    const saveBtn = document.getElementById("saveBtn");
+    const statusSpan = document.getElementById("status");
 
-async function loadSettings() {
-    const { blockedSites, email, enabled } = await chrome.storage.sync.get([
-        "blockedSites",
-        "email",
-        "enabled"
-    ]);
+    // Load settings
+    chrome.storage.sync.get(["blockedSites", "email", "enabled"], (data) => {
+        const blockedSites = data.blockedSites || [];
+        blockedSitesInput.value = blockedSites.join("\n");
 
-    document.getElementById("blockedSites").value = (blockedSites || []).join("\n");
-    document.getElementById("email").value = email || "";
-    document.getElementById("enabled").checked = enabled ?? true;
-}
+        emailInput.value = data.email || "";
+        enabledCheckbox.checked = data.enabled ?? true;
+    });
 
-async function save() {
-    const blockedSites = document
-        .getElementById("blockedSites")
-        .value.split("\n")
-        .map(x => x.trim())
-        .filter(x => x.length > 0);
+    saveBtn.addEventListener("click", () => {
+        const blockedSites = blockedSitesInput.value
+            .split("\n")
+            .map(s => s.trim())
+            .filter(s => s.length > 0);
 
-    const email = document.getElementById("email").value;
-    const enabled = document.getElementById("enabled").checked;
+        const email = emailInput.value.trim();
+        const enabled = enabledCheckbox.checked;
 
-    await chrome.storage.sync.set({ blockedSites, email, enabled });
-    alert("Saved!");
-}
+        chrome.storage.sync.set({ blockedSites, email, enabled }, () => {
+            statusSpan.textContent = "Saved!";
+            setTimeout(() => statusSpan.textContent = "", 1500);
+        });
+    });
+});
