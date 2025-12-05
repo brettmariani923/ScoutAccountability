@@ -61,7 +61,7 @@ function isBlockedHost(hostname, blockedSites) {
 async function captureAndSend(tab, email) {
     try {
         // Capture the visible tab as PNG data URL
-        const imageDataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "jpg", quality: 80 });
+        const imageDataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "jpeg", quality: 80 });
 
         const payload = {
             image: imageDataUrl,
