@@ -3,18 +3,28 @@
   "name": "Scout Accountability",
   "version": "1.0.0",
   "description": "Monitors browsing for blocked sites and emails screenshots to an accountability partner.",
+
   "permissions": [
     "tabs",
+    "activeTab",
     "storage",
-    "activeTab"
+    "scripting"
   ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
   "background": {
     "service_worker": "background.js"
   },
+
   "options_page": "options.html",
+
   "action": {
     "default_popup": "popup.html"
   },
+
   "icons": {
     "16": "icons/scout.png",
     "48": "icons/scout.png",
