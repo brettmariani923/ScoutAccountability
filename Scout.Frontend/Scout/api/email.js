@@ -29,9 +29,9 @@ export default async function handler(req, res) {
             html: `
                  <p>Scout detected a blocked site.</p>
             <ul>
-                <li><strong>URL:</strong> ${escapeHtml(url)}</li>
-                <li><strong>Title:</strong> ${escapeHtml(title || "")}</li>
-                <li><strong>Time (UTC):</strong> ${escapeHtml(timestamp || "")}</li>
+                <li><strong>URL:</strong> ${url}</li>
+                <li><strong>Title:</strong> ${title}</li>
+                <li><strong>Time (UTC):</strong> ${timestamp}</li>
             </ul>
             <p>Screenshot is attached.</p>
             `,
