@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36202.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scout", "Scout\Scout.csproj", "{2F58C353-F066-4BE2-BDCE-CC9CF695BA18}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scout.Frontend", "Scout.Frontend\Scout.Frontend.csproj", "{E371C207-54A2-4110-B3FA-48896751BF50}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
@@ -24,10 +22,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2F58C353-F066-4BE2-BDCE-CC9CF695BA18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F58C353-F066-4BE2-BDCE-CC9CF695BA18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F58C353-F066-4BE2-BDCE-CC9CF695BA18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F58C353-F066-4BE2-BDCE-CC9CF695BA18}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E371C207-54A2-4110-B3FA-48896751BF50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E371C207-54A2-4110-B3FA-48896751BF50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E371C207-54A2-4110-B3FA-48896751BF50}.Release|Any CPU.ActiveCfg = Release|Any CPU
