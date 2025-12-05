@@ -12,7 +12,6 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        // Transporter (Gmail SMTP or SendGrid depending on your env vars)
         const transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: Number(process.env.SMTP_PORT),
@@ -32,9 +31,15 @@ export default async function handler(req, res) {
                 <p><strong>URL:</strong> ${url}</p>
                 <p><strong>Title:</strong> ${title}</p>
                 <p><strong>Time:</strong> ${timestamp}</p>
-                <p><strong>Screenshot:</strong></p>
-                <img src="${image}" style="max-width:600px; border:1px solid #ccc;" />
-            `
+                <p>The screenshot is attached to this email.</p>
+            `,
+            attachments: [
+                {
+                    filename: "screenshot.jpg",
+                    content: image.replace(/^data:image\/\w+;base64,/, ""),
+                    encoding: "base64"
+                }
+            ]
         });
 
         return res.status(200).json({ status: "Email sent" });
