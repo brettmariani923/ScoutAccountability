@@ -27,11 +27,13 @@ export default async function handler(req, res) {
             to: email,
             subject: `Scout Alert - ${url}`,
             html: `
-                <h2>🚨 Scout Alert</h2>
-                <p><strong>URL:</strong> ${url}</p>
-                <p><strong>Title:</strong> ${title}</p>
-                <p><strong>Time:</strong> ${timestamp}</p>
-                <p>The screenshot is attached to this email.</p>
+                 <p>Scout detected a blocked site.</p>
+            <ul>
+                <li><strong>URL:</strong> ${escapeHtml(url)}</li>
+                <li><strong>Title:</strong> ${escapeHtml(title || "")}</li>
+                <li><strong>Time (UTC):</strong> ${escapeHtml(timestamp || "")}</li>
+            </ul>
+            <p>Screenshot is attached.</p>
             `,
             attachments: [
                 {
