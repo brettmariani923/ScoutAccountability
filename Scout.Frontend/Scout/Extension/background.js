@@ -79,3 +79,4 @@ async function captureAndSend(tab, email) {
     } catch (err) {
         console.error("Scout failed to capture/send screenshot:", err);
     }
+}
