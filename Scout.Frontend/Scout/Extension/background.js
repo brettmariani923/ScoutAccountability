@@ -1,5 +1,5 @@
 ﻿const BACKEND_URL = "https://scout-accountability.vercel.app/api/email";
-const ALERT_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
+const ALERT_COOLDOWN_MS = 1 * 60 * 500; // 5 minutes
 
 
 // In-memory map: hostname -> last alert timestamp
